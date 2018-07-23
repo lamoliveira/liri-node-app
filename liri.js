@@ -1,5 +1,6 @@
 // global 
 var moment = require('moment');
+var request = require("request");
 require("dotenv").config();
 var fs = require("fs"); //to append text
 var keys = require('./keys.js'); // to load keys
@@ -12,44 +13,52 @@ var clienttwitter = new twitter({
     access_token_key: keys.twitter.access_token_key,
     access_token_secret: keys.twitter.access_token_secret
 });
-const omdb = require('omdb-js'); //to call omdb api
-var clientomdb = new omdb("trilogy");
 
-function showmovie() {
-    var movie = process.argv.splice(3).join("+");
-    //if (!userSearch) {
-        movie = "Matrix";
-    //}
-    console.log("Movie: " + movie);
-    clientomdb.configure({
-        plot: 'short',
-        page: 1,
-        type: 'movie'
-      });
-    clientomdb.getSpecificMovie(movie,
-        function (error, data, body) {
-            if (!error && data.statusCode === 200) {
+var command = process.argv[2];  // my-tweets, spotify-this-song, movie-this, do-what-it-says
+var search = process.argv[3];
+
+function showmovie(search) {
+    var movie = search; //process.argv.splice(3).join("+");
+    if (!search) {
+        var movie = "The Matrix";
+        console.log("If you haven't watched 'The Matrix', then you should: <https://www.imdb.com/title/tt0133093/?ref_=fn_tt_tt_1>");
+    }
+    var url = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+    request(url,
+        function (error, response, body) {
+            //        console.log(JSON.parse(body));
+
+            if (!error && response.statusCode === 200) {
                 var moviestring =
                     "__________________movie_________________" + "\r\n" +
-                    "movie: " + JSON.parse(body).Title + "\r\n" +
+                    "title: " + JSON.parse(body).Title + "\r\n" +
                     "Year: " + JSON.parse(body).Year + "\r\n" +
-                    "Tomatoes rating: " + JSON.parse(body).Ratings[1].Value + "\r\n" +
-                    "IMDB rating: " + JSON.parse(body).imdbRating + "\r\n" +
-                    "language(s) : " + JSON.parse(body).Language + "\r\n" +
-                    "Produced in: " + JSON.parse(body).Country + "\r\n" +
-                    "Cast: " + JSON.parse(body).Actors + "\r\n" +
+                    "IMDB rating: " + JSON.parse(body).imdbRating + "\r\n";
+                if (JSON.parse(body).Ratings[1]) {
+                    moviestring += "Rotten Tomatoes rating: " + JSON.parse(body).Ratings[1].Value + "\r\n";
+                }
+                else {
+                    moviestring += "Rotten Tomatoes rating: not rated.\r\n";
+
+                }
+                moviestring += "Country: " + JSON.parse(body).Country + "\r\n" +
+                    "Language : " + JSON.parse(body).Language + "\r\n" +
                     "Plot: " + JSON.parse(body).Plot + "\r\n" +
+                    "Actors: " + JSON.parse(body).Actors + "\r\n" +
                     "_____________movie end__________________" + "\r\n";
                 console.log(moviestring);
+
                 //log(moviestring); 
+
             } else {
                 console.log("OMDB error: " + error);
                 return;
             };
+
         });
 }
 function showtwitter(data) {
-    var twitterSearchResults1 = "Recent " + myparams.mycount + " tweets____________________" + "\r\n";
+    var twitterSearchResults1 = "Recent 20 tweets____________________" + "\r\n";
     console.log(twitterSearchResults1);
     //var twitterSearchResults2 = [];
 
@@ -75,25 +84,6 @@ function showtwitter(data) {
     //log(twitterSearchResults); // calling log function
 };
 
-function callsearchtwitter() {
-    var subject = "Donald Trump";
-    var params = {
-        q: subject,
-        count: 10,
-        result_type: 'recent',
-        lang: 'en'
-    };
-
-    clienttwitter.get('search/tweets', params, function (error, data, response) {
-        if (error) {
-            console.log("Twitter Error serch: " + error);
-        } else {
-            // console.log(JSON.stringify(data,null,2));
-            showtwitter(data.statuses);
-        }
-        // console.log("The search result: " + JSON.stringify(data));  //this prints out the entire response object
-    });
-}
 function callmytwitter() {
     var twitterUsername = process.argv.splice(3).join("");
     if (!twitterUsername) {
@@ -114,23 +104,41 @@ function callmytwitter() {
         };
     });
 }
-function callspotify() {
-    var songName = "Hino do vasco (oficial)";
+function callspotify(search) {
+    var songname = search;
+    if (!search) { // If no music informed,shows Vasco that is my team song in brazil
+        var songname = "Hino do vasco (oficial)";
+        console.log("If you haven't listen 'Vasco', then you should");
+    }
 
-    params = songName;
-    clientspotify.search({ type: "track", query: params }, function (error, data) {
+    clientspotify.search({ type: "track", query: songname }, function (error, data) {
+
         if (!error) {
-            var songInfo = data.tracks.items;
+            var song = data.tracks.items;
             for (var i = 0; i < 5; i++) {
-                if (songInfo[i] != undefined) {
+                if (song[i]) {
+                    var artists = "unavailable";
+                    if (song[i].artists[0]) {// test if there is a preview to update otherwise mantain unavailable
+                        for (x = 0; x < song[i].artists.length; x++) {
+                            artists += song[i].artists[x].name
+                            if (x + 1 < song[i].artists.length) {
+                                artists += ", "; // Adds a comma if there is more artists
+                            }
+                        }
+                    }
+                    var preview = "unavailable";
+                    if (song[i].preview_url) { // test if there is a preview to update otherwise mantain unavailable
+                        preview = song[i].preview_url;
+                    }
                     var musics =
-                        "______________Music: " + parseInt(i) + 1 + "______________" + "\r\n" +
-                        "- Music: " + songInfo[i].name + "\r\n" +
-                        "- Artist: " + songInfo[i].artists[0].name + "\r\n" +
-                        "- Album: " + songInfo[i].album.name + "\r\n" +
-                        "- Url: " + songInfo[i].preview_url + "\r\n" +
-                        "______________Music: " + parseInt(i) + 1 + "______________" + "\r\n";
+                        "______________Music: " + (parseInt(i) + 1) + "______________" + "\r\n" +
+                        "- Artist(s): " + artists + "\r\n" +
+                        "- Song's Name: " + song[i].name + "\r\n" +
+                        "- Preview link: " + preview + "\r\n" +
+                        "- Album: " + song[i].album.name + "\r\n" +
+                        "______________Music: " + (parseInt(i) + 1) + "______________" + "\r\n";
                     console.log(musics);
+                    //                    console.log(JSON.stringify(songInfo[i].artists[0], null, 2));
                 }
             }
         } else {
@@ -138,7 +146,51 @@ function callspotify() {
         }
     });
 }
-callspotify(); // show my music
-callmytwitter(); // show my tweets
-callsearchtwitter(); //bonus for searching other tweets just for testing  
-showmovie(); // if no arg, show matrix. mr nobody is good too
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (!error) {
+            //console.log(JSON.stringify(data));
+            var resultsarray = data.split("\r\n");
+            //        results = results.replace("\","");
+            console.log(JSON.stringify(resultsarray));
+
+            for (var z = 0; z < resultsarray.length; z++) {
+               // console.log(resultsarray[z]);
+                
+                //res = res.replace("/", "");
+                console.log(JSON.stringify(resultsarray[z]));
+                var res = resultsarray[z].split(",");
+                console.log("res1:" + res[0]);
+                console.log("res2:" + res[1]);
+                callliri(res[0], res[1]);
+            }
+        } else {
+            console.log("random.txt file error : " + error);
+        }
+    });
+};
+function callliri(command, search) {
+    if (command === "my-tweets") {
+        callmytwitter(); // show my tweets
+    }
+    else if (command === "spotify-this-song") {
+        callspotify(search); // show my music
+    }
+    else if (command === "movie-this") {
+        showmovie(search); // if no arg, show matrix. mr nobody is good too
+    }
+    else if (command === "do-what-it-says") {
+        doWhatItSays();
+    }
+    else {
+        console.log("Ohhh no...I can't understand...To use liri you should command:\r\n");
+        console.log("$ node liri.js <command> <search>\r\n");
+        console.log("example 1: $ node liri.js spotify-this-song samba\r\n");
+        console.log("example 2: $ node liri.js movie-this 'the matrix'\r\n");
+        console.log("example 3: $ node liri.js do-what-it-says\r\n");
+        console.log("example 4: $ node liri.js my-tweets\r\n");
+        console.log("no search available for my-tweets and do-what-it-says\r\n");
+
+    }
+}
+callliri(command, search);
