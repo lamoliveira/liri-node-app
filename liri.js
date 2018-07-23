@@ -1,7 +1,6 @@
 // global 
-var moment = require('moment');
 var request = require("request");
-require("dotenv").config();
+require("dotenv").config(); 
 var fs = require("fs"); //to append text
 var keys = require('./keys.js'); // to load keys
 var twitter = require('twitter'); // to call twitter api
@@ -15,26 +14,35 @@ var clienttwitter = new twitter({
 });
 
 var command = process.argv[2];  // my-tweets, spotify-this-song, movie-this, do-what-it-says
-var search = process.argv[3];
+var search = process.argv[3]; // search argument for spotify and movie
 
+function logtxt(log) { //log correct results to log.txt
+    fs.appendFile("log.txt", log, (error) => {
+        if (error) {
+            throw error;
+        } else {
+            console.log("log ok");
+        }
+    });
+}
 function showmovie(search) {
     var movie = search; //process.argv.splice(3).join("+");
-    if (!search) {
+    var log="";
+    if (!search) { // if no argument try the matrix 
         var movie = "The Matrix";
-        console.log("If you haven't watched 'The Matrix', then you should: <https://www.imdb.com/title/tt0133093/?ref_=fn_tt_tt_1>");
+        log += "If you haven't watched 'The Matrix', then you should: <https://www.imdb.com/title/tt0133093/?ref_=fn_tt_tt_1>";
     }
-    var url = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+    var url = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"; //buind url to request
     request(url,
         function (error, response, body) {
             //        console.log(JSON.parse(body));
-
-            if (!error && response.statusCode === 200) {
+            if (!error && response.statusCode === 200) { //if request works do...
                 var moviestring =
-                    "__________________movie_________________" + "\r\n" +
+                    "_____________movie begin________________" + "\r\n" +
                     "title: " + JSON.parse(body).Title + "\r\n" +
                     "Year: " + JSON.parse(body).Year + "\r\n" +
                     "IMDB rating: " + JSON.parse(body).imdbRating + "\r\n";
-                if (JSON.parse(body).Ratings[1]) {
+                if (JSON.parse(body).Ratings[1]) { // if there is tomatoes rating. There is some movies without this. For a product I should use this code for every field
                     moviestring += "Rotten Tomatoes rating: " + JSON.parse(body).Ratings[1].Value + "\r\n";
                 }
                 else {
@@ -46,47 +54,34 @@ function showmovie(search) {
                     "Plot: " + JSON.parse(body).Plot + "\r\n" +
                     "Actors: " + JSON.parse(body).Actors + "\r\n" +
                     "_____________movie end__________________" + "\r\n";
-                console.log(moviestring);
-
-                //log(moviestring); 
+                log += moviestring;
+                console.log(log);
+                logtxt(log); //writes file log.txt
 
             } else {
-                console.log("OMDB error: " + error);
+                console.log("OMDB error: " + error); // show error to user
                 return;
             };
 
         });
 }
 function showtwitter(data) {
-    var twitterSearchResults1 = "Recent 20 tweets____________________" + "\r\n";
-    console.log(twitterSearchResults1);
-    //var twitterSearchResults2 = [];
-
-    for (var i = 0; i < data.length; i++) {
+    var log =  "______________Recent 20 tweets______________" + "\r\n";;
+    for (var i = 0; i < data.length; i++) { // build log for each tweet
         //console.log(data[i].created_at);
-        var datecreated = data[i].created_at;
-        //datecreated = datecreated.replace("+0000 ","");
-        //datecreated = datecreated.substring(4,30);
-        //console.log(datecreated);
-        //var year = moment(datecreated,"L");
-        //console.log(year);
-        //Sun Jul 22 16:44:30 +0000 2018
-        //var datecreated = toString(data[i].created_at);
-        //twitterSearchResults2[i] = data[i].user.screen_name + " says: " + data[i].text + "\r\n" +
-        //  "Date: " + datecreated + "\r\n";
-        //"Date: " + moment(year).format('L')+ "\r\n"+ "\r\n";
-        console.log("- " + datecreated + " - " + data[i].user.screen_name + " says:\r\n" + "--- " + data[i].text + "\r\n");
+        var datecreated = data[i].created_at; 
+        datecreated = datecreated.replace("+0000 ",""); //clean date
+        datecreated = datecreated.substring(4,30); //clean date
+        log += "- " + datecreated + " - " + data[i].user.screen_name + " says:\r\n" + "--- " + data[i].text + "\r\n";
     };
-    //    var twitterSearchResults3 =
-    "_____________end Twitter_________________" + "\r\n";
-    //    var twitterSearchResults = twitterSearchResults1 + twitterSearchResults2 + twitterSearchResults3;
-    console.log("_____________end Twitter_________________" + "\r\n");
-    //log(twitterSearchResults); // calling log function
+    log += "________________end Tweets___________________" + "\r\n"; //wraps log
+    console.log(log);
+    logtxt(log); // write to log.txt
 };
 
 function callmytwitter() {
     var twitterUsername = process.argv.splice(3).join("");
-    if (!twitterUsername) {
+    if (!twitterUsername) { // if no username shows my test tweets
         var twitterUsername = "@luiz25170475";
     };
     var myparams = {
@@ -100,15 +95,16 @@ function callmytwitter() {
         if (err) {
             console.log("Twitter Error: " + JSON.stringify(err, null, 2));
         } else {
-            showtwitter(data);
+            showtwitter(data); // calls function to show results
         };
     });
 }
 function callspotify(search) {
     var songname = search;
+    var log = ""
     if (!search) { // If no music informed,shows Vasco that is my team song in brazil
         var songname = "Hino do vasco (oficial)";
-        console.log("If you haven't listen 'Vasco', then you should");
+        log += "If you haven't listen 'Vasco', then you should\r\n";
     }
 
     clientspotify.search({ type: "track", query: songname }, function (error, data) {
@@ -137,32 +133,32 @@ function callspotify(search) {
                         "- Preview link: " + preview + "\r\n" +
                         "- Album: " + song[i].album.name + "\r\n" +
                         "______________Music: " + (parseInt(i) + 1) + "______________" + "\r\n";
-                    console.log(musics);
-                    //                    console.log(JSON.stringify(songInfo[i].artists[0], null, 2));
+                    log += musics;
                 }
             }
         } else {
             console.log("Error :" + error);
         }
+        console.log(log);
+        logtxt(log); // writes to log.txt
     });
+
 }
 function doWhatItSays() {
     fs.readFile("random.txt", "utf8", function (error, data) {
         if (!error) {
             //console.log(JSON.stringify(data));
-            var resultsarray = data.split("\r\n");
+            var resultsarray = data.split("\r\n"); // bonus: splits for more than 1 line
             //        results = results.replace("\","");
-            console.log(JSON.stringify(resultsarray));
+            //console.log(JSON.stringify(resultsarray));
 
-            for (var z = 0; z < resultsarray.length; z++) {
-               // console.log(resultsarray[z]);
-                
-                //res = res.replace("/", "");
+            for (var z = 0; z < resultsarray.length; z++) { // for each line do...
+                // console.log(resultsarray[z]);
                 console.log(JSON.stringify(resultsarray[z]));
-                var res = resultsarray[z].split(",");
+                var res = resultsarray[z].split(","); //split each line for each argument
                 console.log("res1:" + res[0]);
                 console.log("res2:" + res[1]);
-                callliri(res[0], res[1]);
+                callliri(res[0], res[1]); // call the function for each line
             }
         } else {
             console.log("random.txt file error : " + error);
@@ -171,18 +167,18 @@ function doWhatItSays() {
 };
 function callliri(command, search) {
     if (command === "my-tweets") {
-        callmytwitter(); // show my tweets
+        callmytwitter(search); // show my tweets 
     }
     else if (command === "spotify-this-song") {
-        callspotify(search); // show my music
+        callspotify(search); //  show my music
     }
     else if (command === "movie-this") {
-        showmovie(search); // if no arg, show matrix. mr nobody is good too
+        showmovie(search); //  show movie
     }
     else if (command === "do-what-it-says") {
-        doWhatItSays();
+        doWhatItSays(); // show results of each line of the random.txt
     }
-    else {
+    else { // help for user to understand the arguments
         console.log("Ohhh no...I can't understand...To use liri you should command:\r\n");
         console.log("$ node liri.js <command> <search>\r\n");
         console.log("example 1: $ node liri.js spotify-this-song samba\r\n");
@@ -193,4 +189,4 @@ function callliri(command, search) {
 
     }
 }
-callliri(command, search);
+callliri(command, search); // main function
