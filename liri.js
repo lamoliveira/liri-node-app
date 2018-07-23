@@ -115,6 +115,7 @@ function callspotify(search) {
                 if (song[i]) {
                     var artists = "unavailable";
                     if (song[i].artists[0]) {// test if there is a preview to update otherwise mantain unavailable
+                        artists = "";
                         for (x = 0; x < song[i].artists.length; x++) {
                             artists += song[i].artists[x].name
                             if (x + 1 < song[i].artists.length) {

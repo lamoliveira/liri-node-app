@@ -118,3 +118,83 @@ ______________Music: 5______________
 - Preview link: https://p.scdn.co/mp3-preview/9801b9239ad1b833f1317574ee55b9d7b8426ff1?cid=65aab3da16ae4f8ba21461b11b22a951
 - Album: Sign of the Times
 ______________Music: 5______________
+______________Music: 1______________
+- Artist(s): unavailableStan Getz, Luiz Bonfá
+- Song's Name: Só Danço Samba
+- Preview link: unavailable
+- Album: Jazz Samba Encore!
+______________Music: 1______________
+______________Music: 2______________
+- Artist(s): unavailableSantana
+- Song's Name: Samba Pa Ti
+- Preview link: https://p.scdn.co/mp3-preview/0a3a805ade20f4dc2b30f0d19687c47d723eac85?cid=65aab3da16ae4f8ba21461b11b22a951
+- Album: Abraxas
+______________Music: 2______________
+______________Music: 3______________
+- Artist(s): unavailableLeandro Da Silva
+- Song's Name: Samba De Janeiro
+- Preview link: https://p.scdn.co/mp3-preview/ec368c708736c5bde15bd74be412397ba626ff89?cid=65aab3da16ae4f8ba21461b11b22a951
+- Album: Samba De Janeiro
+______________Music: 3______________
+______________Music: 4______________
+- Artist(s): unavailableJoey Edwin
+- Song's Name: Sexy Samba
+- Preview link: https://p.scdn.co/mp3-preview/ca6345cda9039e6ef1ff17b687cc364f7094cb43?cid=65aab3da16ae4f8ba21461b11b22a951
+- Album: 212 Degrees
+______________Music: 4______________
+______________Music: 5______________
+- Artist(s): unavailableStan Getz, Luiz Bonfá, Maria Toledo
+- Song's Name: Saudade Vem Correndo
+- Preview link: unavailable
+- Album: Jazz Samba Encore!
+______________Music: 5______________
+______________Music: 1______________
+- Artist(s): Stan Getz, Luiz Bonfá
+- Song's Name: Só Danço Samba
+- Preview link: unavailable
+- Album: Jazz Samba Encore!
+______________Music: 1______________
+______________Music: 2______________
+- Artist(s): Santana
+- Song's Name: Samba Pa Ti
+- Preview link: https://p.scdn.co/mp3-preview/0a3a805ade20f4dc2b30f0d19687c47d723eac85?cid=65aab3da16ae4f8ba21461b11b22a951
+- Album: Abraxas
+______________Music: 2______________
+______________Music: 3______________
+- Artist(s): Leandro Da Silva
+- Song's Name: Samba De Janeiro
+- Preview link: https://p.scdn.co/mp3-preview/ec368c708736c5bde15bd74be412397ba626ff89?cid=65aab3da16ae4f8ba21461b11b22a951
+- Album: Samba De Janeiro
+______________Music: 3______________
+______________Music: 4______________
+- Artist(s): Joey Edwin
+- Song's Name: Sexy Samba
+- Preview link: https://p.scdn.co/mp3-preview/ca6345cda9039e6ef1ff17b687cc364f7094cb43?cid=65aab3da16ae4f8ba21461b11b22a951
+- Album: 212 Degrees
+______________Music: 4______________
+______________Music: 5______________
+- Artist(s): Stan Getz, Luiz Bonfá, Maria Toledo
+- Song's Name: Saudade Vem Correndo
+- Preview link: unavailable
+- Album: Jazz Samba Encore!
+______________Music: 5______________
+_____________movie begin________________
+title: Star Wars: Episode IV - A New Hope
+Year: 1977
+IMDB rating: 8.6
+Rotten Tomatoes rating: 93%
+Country: USA
+Language : English
+Plot: Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle-station, while also attempting to rescue Princess Leia from the evil Darth Vader.
+Actors: Mark Hamill, Harrison Ford, Carrie Fisher, Peter Cushing
+_____________movie end__________________
+______________Recent 20 tweets______________
+- Jul 22 16:44:30 2018 - luiz25170475 says:
+--- i am coding
+- Jul 22 15:59:52 2018 - luiz25170475 says:
+--- test 3 https://t.co/BMdLK7YZzS
+- Jul 22 15:59:09 2018 - luiz25170475 says:
+--- test 2
+- Jul 22 15:58:52 2018 - luiz25170475 says:
+--- test 1
+________________end Tweets___________________
